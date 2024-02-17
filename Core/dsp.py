@@ -1,15 +1,16 @@
 import librosa
 import numpy as np
-
+import matplotlib as plt
 class DSP:
     def __init__(self) -> None:
         pass
 
-    def snr(self,y) -> None:
+    def snr(self,y) :
         # Calculate SNR
         signal = y  # Assuming entire signal is the desired audio
         noise = np.random.randn(len(y))  # Assuming random noise for demonstration
         snr = 10 * np.log10(np.mean(signal**2) / np.mean(noise**2))
+        return snr
 
     def tempo_beats(y,sr):
         tempo, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
@@ -74,7 +75,6 @@ class DSP:
         print("F3 Frequency:", f3_hz, "Hz")
         print("F2/F1 Ratio:", f2_f1_ratio)
         return  f2_f1_ratio
-
 
     def waveplot(y,sr):
         librosa.display.waveplot(y, sr=sr)
