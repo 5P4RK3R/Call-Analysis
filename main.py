@@ -248,3 +248,107 @@ if uploaded_file is not None:
 # # st.page_link("pages/page_1.py", label="Page 1", icon="1️⃣")
 # # st.page_link("pages/page_2.py", label="Page 2", icon="2️⃣", disabled=True)
 # # st.page_link("http://www.google.com", label="Google", icon="🌎")
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import streamlit as st
+import datetime
+df = pd.read_csv("log_data.csv")
+# Create a line chart
+df["time"] = pd.to_datetime(df["Time of Event"], format='%Y/%m/%d %H:%M:%S.%f').dt.strftime('%H:%M')
+
+record = df["String Searched"].value_counts()
+col1, col2 = st.columns(2)
+
+dff = pd.DataFrame({"record":record.keys(),"values":record.values})
+df.fillna("", inplace=True)
+print(record.keys())
+chart_data = pd.DataFrame(
+   {"record":df["MSIDN"],"time":df["time"],"category":df["String Searched"]}
+)
+
+# Place a chart in the first column
+with col1:
+    st.write("Chart 1")
+    st.bar_chart(dff.set_index('record'))
+
+# Place a chart in the second column
+with col2:
+    st.write("Chart 2")
+    # Create a figure and axis
+    fig, ax = plt.subplots()
+    chart_data.plot(ax=ax, kind='line', y=['time'])
+
+# Iterate through categories and plot data
+    grouped = df.groupby('record')
+
+    # Create a figure and axis
+    fig, ax = plt.subplots()
+
+    # Plot each group separately
+    for name, group in grouped:
+        ax.plot(group['time'], group['category'], marker='o', label=name)
+
+    # Customize the plot
+    plt.title('Categorical Data with Time Series')
+    plt.xlabel('Timestamp')
+    plt.ylabel('Value')
+    plt.legend(loc='best')
+    st.pyplot(fig)
+
+    # Show the plot
+    # plt.show()
+#     st.scatter_chart(
+#     chart_data,
+#     x=['time',"category"],
+#     y='record',
+#     color='category'
+# )
+# line_frame = pd.DataFrame(df["time"],columns=record.keys())
+# line_frame = pd.DataFrame({"record":df["String Searched"],"time":df["time"]},x="time",y="record")
+# st.line_chart(line_frame)
+
+# plt.plot(df["time"], df["String Searched"], marker='o', linestyle='-', color='b', label='Line 1')
+# df["count"] = df["String Searched"].value_counts()
+# # Add labels and a title
+# plt.xlabel('Time Period')
+# plt.ylabel('Types')
+# plt.title('Log')
+
+# # Show a legend
+# plt.legend()
+
+# # Display the chart
+# plt.show()
+# print(df.values,df.columns)
+# print(record.keys(),record.values)
+# plt.pie(df["count"], labels=df["String Searched"], autopct='%1.0f%%', startangle=140)
+# plt.show()
+# dff = pd.read_csv("log.csv")
+# df.head()
+
+
+# # Create a bar chart
+# dff.plot(kind='bar', x='record', y='values', legend=False)
+
+# # Set labels and title
+# plt.xlabel('Categories')
+# plt.ylabel('Values')
+# plt.title('Sample Bar Chart')
+
+# # Show the chart
+# plt.show()
+# print(df["MSIDN"])
+# line_frame = pd.DataFrame({"record":df["MSIDN"],"time":df["time"]},x="time",y="record")
+# st.line_chart(line_frame)
+
+# plt.plot(df["time"], df["MSIDN"], marker='o', linestyle='-', color='b', label='Line 1')
+# plt.xlabel('Time Period')
+# plt.ylabel('Phone numbers')
+# plt.title('Log')
+
+# # Show a legend
+# plt.legend()
+
+# # Display the chart
+# plt.show()
